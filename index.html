@@ -1,1 +1,107 @@
 
+<html>
+<script src="https://www.celljs.org/cell.js"></script>
+<!-- Main Quill library -->
+<script src="https://cdn.quilljs.com/1.2.5/quill.js"></script>
+<script src="https://cdn.quilljs.com/1.2.5/quill.min.js"></script>
+<!-- Theme included stylesheets -->
+<link href="https://cdn.quilljs.com/1.2.5/quill.snow.css" rel="stylesheet">
+<link href="https://cdn.quilljs.com/1.2.5/quill.bubble.css" rel="stylesheet">
+aaaa
+<script>
+uuu = {
+  $cell: true,
+  $type: "button",
+  $text: "Click me",
+  style: "font-size: 2rem",
+  _index: 0,
+  _items: ["Coffee", "Tea", "Sparkling Water", "Soft Drink"],
+  onclick: function(){
+    this._index++;
+    this.$text = this._items[this._index];
+  }
+}
+</script>
+<script>
+var el = {
+  $cell: true,
+  style: "font-family: Helvetica; font-size: 14px;",
+  $components: [
+  
+    {
+      $type: "input",
+      type: "text",
+      placeholder: "Type something and press enter",
+      style: "width: 100%; outline:none; padding: 5px;",
+      $init: function(e){ this.focus() },
+      onkeyup: function(e){
+        if(e.keyCode === 13){
+          document.querySelector("#list")._add(this.value);
+          this.value = "";
+        }
+      }
+    },
+    {
+      $type: "ol",
+      id: "list",
+      _items: [],
+      $components: [],
+      _add: function(val){ this._items.push(val) },
+      $update: function(){
+        this.$components = this._items.map(function(item){
+          return { $type: "li", $text: item }
+        })
+      }
+    }
+  ]
+}
+</script>
+
+<h1>adsddddd</h1>
+<script>
+var el2 = {
+  $cell: true,
+  $type: "div",
+  $components: [
+    { $type: "span", $text: "Javascript" },
+    { $type: "span", $text: "objective-c" },
+    { $type: "span", $text: "ruby" },
+    { $type: "span", $text: "java" },
+    { $type: "span", $text: "lisp" }
+  ]
+}
+</script>
+
+<script>
+var GithubApp = {
+  $cell: true,
+  _items: [],
+  $init: function(){
+    this._github();
+  },
+  _github: function(){
+    fetch("https://api.github.com/search/repositories?q=javascript").then(function(res){
+      return res.json();
+    }).then(function(res){
+      this._refresh(res.items);
+    }.bind(this)); 
+  },
+  _refresh: function(result){
+    this._items = result;
+  },
+  _template: function(item){
+    return {
+      $components: [{
+        $text: item.full_name
+      }, {
+        content: item.description ? item.description : ""
+      }]
+    };
+  },
+  $update: function(){
+    this.$components = this._items.map(this._template);
+  }
+}
+</script>
+
+</html>
